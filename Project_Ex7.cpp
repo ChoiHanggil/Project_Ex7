@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include<vector>
 #include<queue>
+#include <unordered_set>
 #include<string>
 #include <sstream>
 #include <stack>
@@ -50,7 +51,17 @@ ListNode* MergeTwoList(ListNode* list1, ListNode* list2)
 //2.
 int CountComponents(int n, std::vector<std::vector<int>>& edges)
 {
-	int count{1};
+	for (auto& e : edges)
+	{
+		if (e[0] > e[1])
+		{
+			std::swap(e[0], e[1]);
+		}
+	}
+
+	std::sort(edges.begin(), edges.end());
+
+	int count{ 1 };
 	int temp = edges[0][1];
 	for (int i = 1; i < edges.size(); i++)
 	{
@@ -60,6 +71,49 @@ int CountComponents(int n, std::vector<std::vector<int>>& edges)
 		}
 
 		temp = edges[i][1];
+	}
+
+	return count;
+}
+
+void BFS(int start, std::vector<std::vector<int>>& adjList, std::unordered_set<int>& record) {
+	std::queue<int> q;
+	q.push(start);
+	record.insert(start);
+
+	while (!q.empty()) 
+	{
+		int node = q.front();
+		q.pop();
+
+		for (int neighbor : adjList[node]) 
+		{
+			if (record.find(neighbor) == record.end()) 
+			{
+				record.insert(neighbor);
+				q.push(neighbor);
+			}
+		}
+	}
+}
+int CountComponents2(int n, std::vector<std::vector<int>>& edges) {
+	std::vector<std::vector<int>> adjList(n);
+	for (const auto& edge : edges) 
+	{
+		adjList[edge[0]].push_back(edge[1]);
+		adjList[edge[1]].push_back(edge[0]);
+	}
+
+	std::unordered_set<int> record;
+	int count = 0;
+
+	for (int i = 0; i < n; ++i) 
+	{
+		if (record.find(i) == record.end()) 
+		{
+			BFS(i, adjList, record);
+			count++;
+		}
 	}
 
 	return count;
