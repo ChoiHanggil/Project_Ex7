@@ -5,6 +5,8 @@
 #include<string>
 #include <sstream>
 #include <stack>
+#include <unordered_map>
+
 struct ListNode
 {
 	int val;
@@ -48,38 +50,39 @@ ListNode* MergeTwoList(ListNode* list1, ListNode* list2)
 	
 	return head->next;
 }
+
 //2.
-int CountComponents(int n, std::vector<std::vector<int>>& edges)
-{
-	for (auto& e : edges)
-	{
-		if (e[0] > e[1])
-		{
-			std::swap(e[0], e[1]);
-		}
-	}
+//int CountComponents(int n, std::vector<std::vector<int>>& edges)
+//{
+//	for (auto& e : edges)
+//	{
+//		if (e[0] > e[1])
+//		{
+//			std::swap(e[0], e[1]);
+//		}
+//	}
+//
+//	std::sort(edges.begin(), edges.end());
+//
+//	int count{ 1 };
+//	int temp = edges[0][1];
+//	for (int i = 1; i < edges.size(); i++)
+//	{
+//		if (temp != edges[i][0])
+//		{
+//			count++;
+//		}
+//
+//		temp = edges[i][1];
+//	}
+//
+//	return count;
+//}
 
-	std::sort(edges.begin(), edges.end());
-
-	int count{ 1 };
-	int temp = edges[0][1];
-	for (int i = 1; i < edges.size(); i++)
-	{
-		if (temp != edges[i][0])
-		{
-			count++;
-		}
-
-		temp = edges[i][1];
-	}
-
-	return count;
-}
-
-void BFS(int start, std::vector<std::vector<int>>& adjList, std::unordered_set<int>& record) {
+void BFS(int search, std::vector<std::vector<int>>& adjList, std::unordered_set<int>& record) {
 	std::queue<int> q;
-	q.push(start);
-	record.insert(start);
+	q.push(search);
+	record.insert(search);
 
 	while (!q.empty()) 
 	{
@@ -96,7 +99,8 @@ void BFS(int start, std::vector<std::vector<int>>& adjList, std::unordered_set<i
 		}
 	}
 }
-int CountComponents2(int n, std::vector<std::vector<int>>& edges) {
+
+int CountComponents(int n, std::vector<std::vector<int>>& edges) {
 	std::vector<std::vector<int>> adjList(n);
 	for (const auto& edge : edges) 
 	{
@@ -107,7 +111,7 @@ int CountComponents2(int n, std::vector<std::vector<int>>& edges) {
 	std::unordered_set<int> record;
 	int count = 0;
 
-	for (int i = 0; i < n; ++i) 
+	for (int i = 0; i < n; i++) 
 	{
 		if (record.find(i) == record.end()) 
 		{
@@ -118,6 +122,7 @@ int CountComponents2(int n, std::vector<std::vector<int>>& edges) {
 
 	return count;
 }
+
 
 struct TreeNode
 {
@@ -197,7 +202,23 @@ public:
 		return root;
 	}
 };
+
 //4.
+std::vector<int> TwoSum2(std::vector<int>& nums, int target) {
+	std::unordered_map<int, int> umap;
+	for (int i = 0; i < nums.size(); ++i) 
+	{
+		int complement = target - nums[i];
+		if (umap.find(complement) != umap.end()) 
+		{
+			return { umap[complement], i };
+		}
+		umap[nums[i]] = i;
+	}
+	return {};
+}
+
+
 std::vector<int> TwoSum(std::vector<int>& nums, int target)
 {
 	std::vector<int> ans;
@@ -215,6 +236,7 @@ std::vector<int> TwoSum(std::vector<int>& nums, int target)
 	}
 	return ans;
 }
+
 //5.
 TreeNode* InverBT(TreeNode* root)
 {
@@ -244,6 +266,9 @@ TreeNode* InverBT(TreeNode* root)
 
 	return root;
 }
+
+
+
 void PrintTree(TreeNode* root) {
 	if (!root) return;
 	std::queue<TreeNode*> q;
@@ -279,6 +304,15 @@ int main()
 	//PrintList(mergedList);
 
 
+	//int n = 5; // 노드의 수
+	//std::vector<std::vector<int>> edges = {
+	//	{0,1},{1,2},{3,4}, { 4,0 }
+	//};
+
+	//int numComponents = CountComponents(n, edges);
+	//std::cout << "Number of connected components: " << numComponents << std::endl;
+
+
 	//TreeNode* root = new TreeNode(1);
 	//root->left = new TreeNode(2);
 	//root->right = new TreeNode(3);
@@ -286,7 +320,9 @@ int main()
 	//root->right->right = new TreeNode(5);
 
 	//Codec ser, deser;
-	//TreeNode* ans = deser.Deserialize(ser.Serialize(root));
+	//TreeNode* ans = deser.Deserialize(ser.Serialize(root)) ;
+
+	//std::cout << ser.Serialize(root) << std::endl;
 	//PrintTree(ans);
 
 
@@ -307,5 +343,13 @@ int main()
 	//std::cout << "Inverted Tree: ";
 	//PrintTree(invertedRoot);
 	//std::cout << std::endl;
+
+
+	//std::vector<int> nums{ 3,2,4 };
+	//for (auto e : TwoSum2(nums, 6))
+	//{
+	//	std::cout << e;
+	//}
+
 }
 
