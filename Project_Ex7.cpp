@@ -79,7 +79,8 @@ ListNode* MergeTwoList(ListNode* list1, ListNode* list2)
 //	return count;
 //}
 
-void BFS(int search, std::vector<std::vector<int>>& adjList, std::unordered_set<int>& record) {
+void BFS(int search, std::vector<std::vector<int>>& adjList, std::unordered_set<int>& record) 
+{
 	std::queue<int> q;
 	q.push(search);
 	record.insert(search);
@@ -100,8 +101,9 @@ void BFS(int search, std::vector<std::vector<int>>& adjList, std::unordered_set<
 	}
 }
 
-int CountComponents(int n, std::vector<std::vector<int>>& edges) {
-	std::vector<std::vector<int>> adjList(n);
+int CountComponents(int n, std::vector<std::vector<int>>& edges) 
+{
+	std::vector<std::vector<int>> adjList(n);//adjecebcy list
 	for (const auto& edge : edges) 
 	{
 		adjList[edge[0]].push_back(edge[1]);
@@ -122,6 +124,43 @@ int CountComponents(int n, std::vector<std::vector<int>>& edges) {
 
 	return count;
 }
+void DFS(int node, std::vector<std::vector<int>>& adjList, std::vector<bool>& visited)
+{
+	visited[node] = true;
+	for (const auto& neighbor : adjList[node])
+	{
+		if (!visited[neighbor])
+		{
+			DFS(neighbor, adjList, visited);
+		}
+	}
+}
+int CountComponents3(int n, std::vector<std::vector<int>>& edges)
+{
+	//adjacency list
+	std::vector<std::vector<int>> adjList(n);
+	for (const auto& edge  : edges)
+	{
+		int u = edge[0];
+		int v = edge[1];
+
+		adjList[u].push_back(v);
+		adjList[v].push_back(u);
+	}
+
+	std::vector<bool> visited(n, false);
+	int count{};
+
+	for (int i = 0; i < n; i++)
+	{
+		if (!visited[i])
+		{
+			DFS(i, adjList, visited);
+			count++;
+		}
+	}
+}
+
 
 
 struct TreeNode
@@ -165,6 +204,7 @@ public:
 
 		return s;
 	}
+
 	TreeNode* Deserialize(std::string data)
 	{
 		std::istringstream iss(data);
